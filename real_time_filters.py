@@ -16,20 +16,20 @@ def apply_filter(image, ftype):
         img[:, :, 1] = img[:, :, 2] = 0
     elif ftype == "sobel":
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        sx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=3)
-        sy = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=3)
+        sx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=4)
+        sy = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=4)
         magnitude = cv2.magnitude(sx, sy)          # sqrt(sx^2 + sy^2), correct combination
         sob = cv2.convertScaleAbs(magnitude)        # properly scales/clips to uint8
         img = cv2.cvtColor(sob, cv2.COLOR_GRAY2BGR)
     elif ftype == "canny":
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        can = cv2.Canny(gray, 100, 200)
+        can = cv2.Canny(gray, 1, 20)
         img = cv2.cvtColor(can, cv2.COLOR_GRAY2BGR)
     elif ftype == "cartoon":
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        gray = cv2.medianBlur(gray, 5)
+        gray = cv2.medianBlur(gray, 4)
         edges = cv2.adaptiveThreshold(
-            gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 9, 9
+            gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 6, 9
         )
         color = cv2.bilateralFilter(image, 9, 300, 300)
         img = cv2.bitwise_and(color, color, mask=edges)
